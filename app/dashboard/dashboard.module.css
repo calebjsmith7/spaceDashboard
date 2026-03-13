@@ -1,0 +1,94 @@
+.container {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.topSection {
+  height: 50%;
+  width: 100%;
+  border-bottom: 1px solid var(--foreground);
+  box-sizing: border-box;
+}
+
+.bottomContainer {
+  height: 50%;
+  width: 100%;
+  display: flex;
+}
+
+.panel {
+  flex: 1;
+  box-sizing: border-box;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.panelLeft {
+  border-right: 1px solid var(--foreground);
+}
+
+.panelHeader {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0 0 1rem 0;
+}
+
+.panelContent {
+  flex: 1;
+  overflow: auto;
+  padding: 1rem;
+}
+
+.tabButton {
+  display: none;
+  width: 100%;
+  height: 3rem;
+  padding: 0 1rem;
+  background: rgba(128, 128, 128, 0.1);
+  border: none;
+  border-bottom: 1px solid var(--foreground);
+  color: var(--foreground);
+  font-weight: 600;
+  cursor: pointer;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+  .bottomContainer {
+    flex-direction: column;
+  }
+
+  .panel {
+    flex: none;
+    height: 50%;
+    transition: height 0.3s ease;
+  }
+
+  .panelLeft {
+    border-right: none;
+    border-bottom: 1px solid var(--foreground);
+  }
+
+  .panelCollapsed {
+    height: 3rem;
+  }
+
+  .panelExpanded {
+    height: calc(100% - 3rem);
+  }
+
+  .tabButton {
+    display: flex;
+  }
+
+  .panelHeader {
+    display: none;
+  }
+}
