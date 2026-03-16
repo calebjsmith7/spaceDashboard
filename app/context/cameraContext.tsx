@@ -1,0 +1,22 @@
+"use client";
+import {createContext, useContext, useState, useEffect, useMemo} from 'react';
+
+export const CameraContext = createContext(null);
+
+export const useCameraContext = () => useContext(CameraContext);
+
+export const CameraProvider = ({children} : {children: React.ReactNode}) => {
+    const [center, setCenter] = useState<'earth' | 'sun'>('earth');
+
+
+    const value = useMemo(() => ({
+        center,
+        setCenter
+    }),[center])
+
+    return(
+        <CameraContext.Provider value={value}>
+            {children}
+        </CameraContext.Provider>
+    )
+};

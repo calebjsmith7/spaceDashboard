@@ -3,11 +3,13 @@ import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Stars } from "@react-three/drei";
 import Sun from './planets/Sun';
 import Earth from './planets/Earth';
-
+import { useCameraContext } from "../../context/cameraContext";
 const MainPanel = () => {
+  const { center, setCenter } = useCameraContext();
+
   return (
     <div className={styles.topSection}>
-      <Canvas camera={{ position: [0, 0, 2.5] }}>
+      <Canvas camera={{ position: [0, 0, 4] }}>
         {/* Space-black background */}
         <color attach="background" args={["#000008"]} />
 
@@ -20,8 +22,8 @@ const MainPanel = () => {
           saturation={1} // 0 = white stars, 1 = colorful
           fade // stars fade at the edges
         />
-        <Sun />
-        <Earth />
+        <Sun center={center} setCenter={setCenter} />
+        <Earth center={center} setCenter={setCenter} />
         <OrbitControls enableZoom minDistance={1.5} maxDistance={6} />
       </Canvas>
     </div>
