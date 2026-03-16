@@ -104,7 +104,7 @@ function OrbitLine({ radius, color, label }: OrbitLineProps) {
   ];
 
   // Scale font size based on orbit radius for readability
-  const fontSize = Math.max(1.5, Math.min(radius * 0.04, 8));
+  const fontSize = Math.max(1.5, Math.min(radius * 0.04, 40));
 
   return (
     <group>
