@@ -1,7 +1,12 @@
 "use client";
 import {createContext, useContext, useState, useEffect, useMemo} from 'react';
 
-export const CameraContext = createContext(null);
+export const CameraContext = createContext({
+  center: "sun" as "earth" | "sun",
+  setCenter: (center: "earth" | "sun") => {
+    center;
+  },
+});
 
 export const useCameraContext = () => useContext(CameraContext);
 
