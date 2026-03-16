@@ -17,45 +17,114 @@ import {
   geoToThreeJS,
 } from "../../../services/satelliteService";
 import { useSatelliteContext } from "../../../context/satelliteContext";
+import {
+  StarlinkSatellite,
+  WeatherSatellite,
+  SpaceStation,
+  GPSSatellite,
+  ScienceSatellite,
+  GenericSatellite,
+} from "./models";
 
 interface SatellitePointProps {
   satellite: Satellite;
   satrec: satelliteJs.SatRec;
   color: string;
+  category: SatelliteCategory;
   earthPosition: THREE.Vector3;
   onHover?: (satellite: Satellite | null) => void;
+}
+
+// Get the appropriate 3D model component based on satellite category
+function getSatelliteModel(
+  category: SatelliteCategory, 
+  hovered: boolean, 
+  color: string
+) {
+  switch (category) {
+    case 'starlink':
+      return <StarlinkSatellite hovered={hovered} />;
+    case 'weather':
+      return <WeatherSatellite hovered={hovered} />;
+    case 'stations':
+      return <SpaceStation hovered={hovered} />;
+    case 'gps-ops':
+      return <GPSSatellite hovered={hovered} />;
+    case 'science':
+      return <ScienceSatellite hovered={hovered} />;
+    case 'active':
+    default:
+      return <GenericSatellite hovered={hovered} color={color} />;
+  }
 }
 
 function SatellitePoint({
   satellite,
   satrec,
   color,
+  category,
   earthPosition,
   onHover,
 }: SatellitePointProps) {
-  const meshRef = useRef<THREE.Mesh>(null);
+  const groupRef = useRef<THREE.Group>(null);
   const [hovered, setHovered] = useState(false);
 
-  useFrame(() => {
-    if (!meshRef.current) return;
+  useFrame((state) => {
+    if (!groupRef.current) return;
 
     const now = new Date();
     const position = calculateSatellitePosition(satrec, now);
 
     if (position) {
-      const threePos = geoToThreeJS(position.lat, position.lng, position.altitude);
+      const threePos = geoToThreeJS(
+        position.lat,
+        position.lng,
+        position.altitude,
+      );
       // Offset by Earth's position in the scene
-      meshRef.current.position.set(
+      groupRef.current.position.set(
         threePos.x + earthPosition.x,
         threePos.y + earthPosition.y,
-        threePos.z + earthPosition.z
+        threePos.z + earthPosition.z,
       );
+
+      // Make satellite face the direction of travel (tangent to orbit)
+      // Calculate velocity direction for orientation
+      const futureTime = new Date(now.getTime() + 1000); // 1 second ahead
+      const futurePosition = calculateSatellitePosition(satrec, futureTime);
+
+      if (futurePosition) {
+        const futureThreePos = geoToThreeJS(
+          futurePosition.lat,
+          futurePosition.lng,
+          futurePosition.altitude,
+        );
+
+        // Calculate direction vector
+        const direction = new THREE.Vector3(
+          futureThreePos.x - threePos.x,
+          futureThreePos.y - threePos.y,
+          futureThreePos.z - threePos.z,
+        ).normalize();
+
+        // Orient satellite along its velocity vector
+        const up = new THREE.Vector3(
+          threePos.x,
+          threePos.y,
+          threePos.z,
+        ).normalize();
+        const quaternion = new THREE.Quaternion();
+        const matrix = new THREE.Matrix4();
+        matrix.lookAt(new THREE.Vector3(0, 0, 0), direction, up);
+        quaternion.setFromRotationMatrix(matrix);
+        groupRef.current.quaternion.copy(quaternion);
+      }
     }
   });
 
   return (
-    <mesh
-      ref={meshRef}
+    <group
+      ref={groupRef}
       onPointerOver={(e) => {
         e.stopPropagation();
         setHovered(true);
@@ -68,26 +137,35 @@ function SatellitePoint({
         document.body.style.cursor = "default";
       }}
     >
-      <sphereGeometry args={[hovered ? 0.03 : 0.02, 8, 8]} />
-      <meshBasicMaterial color={hovered ? "#ffffff" : color} />
+      {/* Render the appropriate 3D satellite model */}
+      {getSatelliteModel(category, hovered, color)}
+
+      {/* Tooltip on hover */}
       {hovered && (
         <Html distanceFactor={10}>
           <div
             style={{
-              background: "rgba(0, 0, 0, 0.8)",
+              background: "rgba(0, 0, 0, 0.85)",
               color: "white",
-              padding: "4px 8px",
-              borderRadius: "4px",
+              padding: "8px 12px",
+              borderRadius: "6px",
               fontSize: "12px",
               whiteSpace: "nowrap",
               pointerEvents: "none",
+              border: `1px solid ${color}`,
+              boxShadow: `0 0 10px ${color}40`,
             }}
           >
-            {satellite.name}
+            <div style={{ fontWeight: "bold", marginBottom: "4px" }}>
+              {satellite.name}
+            </div>
+            <div style={{ fontSize: "10px", opacity: 0.8, color: color }}>
+              {SATELLITE_CATEGORIES[category].label}
+            </div>
           </div>
         </Html>
       )}
-    </mesh>
+    </group>
   );
 }
 
@@ -158,6 +236,7 @@ export default function Satellites({
             satellite={satellite}
             satrec={satrec}
             color={config.color}
+            category={category}
             earthPosition={earthPosition}
             onHover={setHoveredSatellite}
           />
