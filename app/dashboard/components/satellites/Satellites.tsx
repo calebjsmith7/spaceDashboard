@@ -25,6 +25,7 @@ import {
   ScienceSatellite,
   GenericSatellite,
 } from "./models";
+import { ThreeEvent } from "@react-three/fiber";
 
 interface SatellitePointProps {
   satellite: Satellite;
@@ -33,6 +34,7 @@ interface SatellitePointProps {
   category: SatelliteCategory;
   earthPosition: THREE.Vector3;
   onHover?: (satellite: Satellite | null) => void;
+  onClick?: (satellite: Satellite) => void;
 }
 
 // Get the appropriate 3D model component based on satellite category
@@ -65,6 +67,7 @@ function SatellitePoint({
   category,
   earthPosition,
   onHover,
+  onClick,
 }: SatellitePointProps) {
   const groupRef = useRef<THREE.Group>(null);
   const [hovered, setHovered] = useState(false);
@@ -136,20 +139,30 @@ function SatellitePoint({
         onHover?.(null);
         document.body.style.cursor = "default";
       }}
+      onClick={(e: ThreeEvent<MouseEvent>) => {
+        e.stopPropagation();
+        onClick?.(satellite);
+      }}
     >
+      {/* Invisible hitbox for easier hovering */}
+      <mesh visible={false}>
+        <sphereGeometry args={[0.15, 8, 8]} />
+        <meshBasicMaterial transparent opacity={0} />
+      </mesh>
+
       {/* Render the appropriate 3D satellite model */}
       {getSatelliteModel(category, hovered, color)}
 
       {/* Tooltip on hover */}
       {hovered && (
-        <Html distanceFactor={10}>
+        <Html distanceFactor={5} style={{ pointerEvents: "none" }}>
           <div
             style={{
               background: "rgba(0, 0, 0, 0.85)",
               color: "white",
-              padding: "8px 12px",
-              borderRadius: "6px",
-              fontSize: "12px",
+              padding: "6px 10px",
+              borderRadius: "4px",
+              fontSize: "11px",
               whiteSpace: "nowrap",
               pointerEvents: "none",
               border: `1px solid ${color}`,
@@ -180,6 +193,7 @@ export default function Satellites({
   earthPosition = new THREE.Vector3(50, 0, 0), // Default Earth position (at orbit radius)
   visible = true,
 }: SatellitesProps) {
+  const { setSelectedSatellite } = useSatelliteContext();
   const [satellites, setSatellites] = useState<
     Map<SatelliteCategory, { satellite: Satellite; satrec: satelliteJs.SatRec }[]>
   >(new Map());
@@ -239,6 +253,7 @@ export default function Satellites({
             category={category}
             earthPosition={earthPosition}
             onHover={setHoveredSatellite}
+            onClick={setSelectedSatellite}
           />
         ));
       })}

@@ -91,4 +91,14 @@
   .panelHeader {
     display: none;
   }
+
+  .desktopOnly {
+    display: none !important;
+  }
+}
+
+@media (min-width: 769px) {
+  .tabButton {
+    display: none !important;
+  }
 }
