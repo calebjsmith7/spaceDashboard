@@ -25,11 +25,9 @@ export default function CameraController({ center, controlsRef }: CameraControll
     if (center === "sun") {
       // Zoomed out view for sun
       targetPosition.current.set(0, 45, 45);
-      targetLookAt.current.set(0, 0, 0);
     } else {
       // Zoomed in view for earth - Earth moves to origin, camera looks at origin
       targetPosition.current.set(3, 2, 4);
-      targetLookAt.current.set(0, 0, 0);
     }
   }, [center]);
 
