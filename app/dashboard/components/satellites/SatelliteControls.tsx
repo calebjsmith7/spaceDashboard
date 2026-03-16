@@ -125,6 +125,8 @@ export default function SatelliteControls() {
     toggleCategory,
     showSatellites,
     setShowSatellites,
+    showOrbits,
+    setShowOrbits,
     getCategoryConfig,
     allCategories,
   } = useSatelliteContext();
@@ -203,6 +205,32 @@ export default function SatelliteControls() {
               </label>
             );
           })}
+        </div>
+      </div>
+
+      {/* Orbit Lines Toggle */}
+      <div style={controlStyles.section}>
+        <div style={controlStyles.sectionHeader}>
+          <h3 style={controlStyles.sectionTitle}>Orbital Paths</h3>
+          <label style={controlStyles.toggle}>
+            <div
+              style={{
+                ...controlStyles.toggleSwitch,
+                background: showOrbits ? "#238636" : "#30363d",
+              }}
+              onClick={() => setShowOrbits(!showOrbits)}
+            >
+              <div
+                style={{
+                  ...controlStyles.toggleKnob,
+                  left: showOrbits ? "18px" : "2px",
+                }}
+              />
+            </div>
+          </label>
+        </div>
+        <div style={{ fontSize: "11px", color: "#8b949e", padding: "0 4px" }}>
+          Show predicted orbital paths for visible satellites
         </div>
       </div>
 

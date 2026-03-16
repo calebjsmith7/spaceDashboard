@@ -26,6 +26,7 @@ import {
   GenericSatellite,
 } from "./models";
 import { ThreeEvent } from "@react-three/fiber";
+import SatelliteOrbit from "./SatelliteOrbit";
 
 interface SatellitePointProps {
   satellite: Satellite;
@@ -193,7 +194,7 @@ export default function Satellites({
   earthPosition = new THREE.Vector3(50, 0, 0), // Default Earth position (at orbit radius)
   visible = true,
 }: SatellitesProps) {
-  const { setSelectedSatellite } = useSatelliteContext();
+  const { setSelectedSatellite, showOrbits } = useSatelliteContext();
   const [satellites, setSatellites] = useState<
     Map<SatelliteCategory, { satellite: Satellite; satrec: satelliteJs.SatRec }[]>
   >(new Map());
@@ -245,16 +246,26 @@ export default function Satellites({
       {Array.from(satellites.entries()).map(([category, sats]) => {
         const config = SATELLITE_CATEGORIES[category];
         return sats.map(({ satellite, satrec }) => (
-          <SatellitePoint
-            key={satellite.id}
-            satellite={satellite}
-            satrec={satrec}
-            color={config.color}
-            category={category}
-            earthPosition={earthPosition}
-            onHover={setHoveredSatellite}
-            onClick={setSelectedSatellite}
-          />
+          <group key={satellite.id}>
+            {/* Render orbital path if enabled */}
+            {showOrbits && (
+              <SatelliteOrbit
+                satrec={satrec}
+                color={config.color}
+                earthPosition={earthPosition}
+              />
+            )}
+            {/* Render satellite point */}
+            <SatellitePoint
+              satellite={satellite}
+              satrec={satrec}
+              color={config.color}
+              category={category}
+              earthPosition={earthPosition}
+              onHover={setHoveredSatellite}
+              onClick={setSelectedSatellite}
+            />
+          </group>
         ));
       })}
     </group>

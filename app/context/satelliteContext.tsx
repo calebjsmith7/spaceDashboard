@@ -15,6 +15,8 @@ interface SatelliteContextType {
   // Visibility
   showSatellites: boolean;
   setShowSatellites: (show: boolean) => void;
+  showOrbits: boolean;
+  setShowOrbits: (show: boolean) => void;
 
   // Helpers
   getCategoryConfig: (category: SatelliteCategory) => {
@@ -47,6 +49,7 @@ export const SatelliteProvider = ({ children }: { children: ReactNode }) => {
     SatelliteCategory[]
   >(["stations", "weather", "gps-ops", "science"]);
   const [showSatellites, setShowSatellites] = useState(true);
+  const [showOrbits, setShowOrbits] = useState(false);
   const [selectedSatellite, setSelectedSatellite] = useState<Satellite | null>(
     null,
   );
@@ -80,12 +83,14 @@ export const SatelliteProvider = ({ children }: { children: ReactNode }) => {
       setEnabledCategories,
       showSatellites,
       setShowSatellites,
+      showOrbits,
+      setShowOrbits,
       getCategoryConfig,
       allCategories,
       selectedSatellite,
       setSelectedSatellite,
     }),
-    [enabledCategories, showSatellites, selectedSatellite],
+    [enabledCategories, showSatellites, showOrbits, selectedSatellite],
   );
 
   return (
