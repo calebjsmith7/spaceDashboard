@@ -7,16 +7,21 @@ const EARTH_ORBIT_RADIUS = 50;
 const EARTH_CENTER_POS = [0, 0, 0];
 const EARTH_OFFSET_POS = [EARTH_ORBIT_RADIUS, 0, 0];
 
-function Clouds({ cloudsMap, targetPosition }) {
+function Clouds({ cloudsMap, targetPosition, shouldRotate }) {
   const cloudsRef = useRef();
   const positionRef = useRef(new THREE.Vector3(...targetPosition));
 
-  useFrame((_, delta) => {
-    cloudsRef.current.rotation.y += delta * 0.1;
+  const handleFrame = (_, delta) => {
+    // Only rotate clouds when not viewing satellites (sun-centered view)
+    if (shouldRotate) {
+      cloudsRef.current.rotation.y += delta * 0.1;
+    }
     // Smoothly interpolate position
     positionRef.current.lerp(new THREE.Vector3(...targetPosition), delta * 2);
     cloudsRef.current.position.copy(positionRef.current);
-  });
+  };
+
+  useFrame(handleFrame);
 
   return (
     <mesh ref={cloudsRef}>
@@ -51,17 +56,30 @@ function Earth({ center, setCenter }) {
   const targetPosition =
     center === "earth" ? EARTH_CENTER_POS : EARTH_OFFSET_POS;
 
-  useFrame((_, delta) => {
-    earthRef.current.rotation.y += delta * 0.08;
+  // Only rotate when viewing from sun (not when viewing satellites)
+  const shouldRotate = center !== "earth";
+
+  const handleFrame = (_, delta) => {
+    // Only rotate Earth when in sun-centered view
+    // When earth-centered, satellites are positioned relative to a fixed Earth
+    if (shouldRotate) {
+      earthRef.current.rotation.y += delta * 0.08;
+    }
     // Smoothly interpolate position
     positionRef.current.lerp(new THREE.Vector3(...targetPosition), delta * 2);
     earthRef.current.position.copy(positionRef.current);
-  });
+  };
+
+  useFrame(handleFrame);
 
   return (
     <>
       {cloudsMap && (
-        <Clouds cloudsMap={cloudsMap} targetPosition={targetPosition} />
+        <Clouds
+          cloudsMap={cloudsMap}
+          targetPosition={targetPosition}
+          shouldRotate={shouldRotate}
+        />
       )}
       <mesh
         ref={earthRef}

@@ -1,4 +1,5 @@
 import styles from "../dashboard.module.css";
+import SatelliteControls from "./satellites/SatelliteControls";
 
 type SubPanelLeftProps = {
   expanded: boolean;
@@ -17,11 +18,11 @@ const SubPanelLeft = ({ expanded, collapsed, onToggle }: SubPanelLeftProps) => {
   return (
     <div className={getPanelClass()}>
       <button className={styles.tabButton} onClick={onToggle}>
-        <span>Panel 1</span>
+        <span>Satellite Controls</span>
         <span>{expanded ? "▼" : "▲"}</span>
       </button>
       <div className={styles.panelContent}>
-        <h2 className={styles.panelHeader}>Panel 1</h2>
+        <SatelliteControls />
       </div>
     </div>
   );
