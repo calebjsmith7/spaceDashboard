@@ -6,7 +6,7 @@ export const CameraContext = createContext(null);
 export const useCameraContext = () => useContext(CameraContext);
 
 export const CameraProvider = ({children} : {children: React.ReactNode}) => {
-    const [center, setCenter] = useState<'earth' | 'sun'>('earth');
+    const [center, setCenter] = useState<"earth" | "sun">("sun");
 
 
     const value = useMemo(() => ({

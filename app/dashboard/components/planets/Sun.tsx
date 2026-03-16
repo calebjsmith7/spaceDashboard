@@ -8,8 +8,11 @@ const CORE_COLOR = "#fff4a3";
 const SURFACE_COLOR = "#ff9500";
 const CORONA_COLOR = "#ff6a00";
 
+// Sun visual radius (not to true scale - would be 109x Earth)
+const SUN_RADIUS = 10;
+const EARTH_ORBIT_RADIUS = 50;
 const SUN_CENTER_POS: [number, number, number] = [0, 0, 0];
-const SUN_OFFSET_POS: [number, number, number] = [-12, 4, -10];
+const SUN_OFFSET_POS: [number, number, number] = [-EARTH_ORBIT_RADIUS, 0, 0];
 
 export default function Sun({
   center,
@@ -46,18 +49,18 @@ export default function Sun({
       onPointerOut={() => (document.body.style.cursor = "default")}
     >
       {/* Light emanating from the sun */}
-      <pointLight intensity={3} color="#fff4a3" distance={30} decay={1} />
-      <directionalLight intensity={1.5} color="#fff5e0" />
+      <pointLight intensity={5} color="#fff4a3" distance={200} decay={1} />
+      <directionalLight intensity={2} color="#fff5e0" />
 
       {/* Core — bright white-yellow center */}
       <mesh>
-        <sphereGeometry args={[0.28, 32, 32]} />
+        <sphereGeometry args={[SUN_RADIUS * 0.78, 32, 32]} />
         <meshBasicMaterial color={CORE_COLOR} />
       </mesh>
 
       {/* Surface — textured with real solar photo, slight distort for movement */}
       <mesh ref={surfaceRef}>
-        <sphereGeometry args={[0.35, 64, 64]} />
+        <sphereGeometry args={[SUN_RADIUS, 64, 64]} />
         <MeshDistortMaterial
           map={sunTexture}
           emissiveMap={sunTexture}
@@ -71,7 +74,7 @@ export default function Sun({
 
       {/* Corona — soft outer glow layer */}
       <mesh ref={coronaRef}>
-        <sphereGeometry args={[0.48, 32, 32]} />
+        <sphereGeometry args={[SUN_RADIUS * 1.25, 32, 32]} />
         <meshBasicMaterial
           color={CORONA_COLOR}
           transparent
@@ -82,7 +85,7 @@ export default function Sun({
 
       {/* Outer glow halo */}
       <mesh>
-        <sphereGeometry args={[0.62, 32, 32]} />
+        <sphereGeometry args={[SUN_RADIUS * 1.5, 32, 32]} />
         <meshBasicMaterial
           color="#ff4400"
           transparent
@@ -93,9 +96,9 @@ export default function Sun({
 
       {/* Sparkles simulate solar flares / corona particles */}
       <Sparkles
-        count={40}
-        scale={1.2}
-        size={2}
+        count={100}
+        scale={SUN_RADIUS * 2.5}
+        size={6}
         speed={0.4}
         color="#ffaa00"
         opacity={0.7}

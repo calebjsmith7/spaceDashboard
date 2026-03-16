@@ -3,8 +3,9 @@ import { useFrame } from '@react-three/fiber'
 import { useTexture } from '@react-three/drei'
 import * as THREE from "three";
 
+const EARTH_ORBIT_RADIUS = 50;
 const EARTH_CENTER_POS = [0, 0, 0];
-const EARTH_OFFSET_POS = [12, -4, 10];
+const EARTH_OFFSET_POS = [EARTH_ORBIT_RADIUS, 0, 0];
 
 function Clouds({ cloudsMap, targetPosition }) {
   const cloudsRef = useRef();

@@ -28,7 +28,9 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
-    "**/*.mts"
+    "**/*.mts",
+    "app/dashboard/components/planets/Earth.jsx",
+    "app/dashboard/components/planets/Sun.jsx"
   ],
   "exclude": ["node_modules"]
 }
