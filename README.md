@@ -1,6 +1,14 @@
 # SpaceViz 🛰️
 
 An interactive 3D satellite visualization dashboard built with Next.js, React Three Fiber, and real-time TLE (Two-Line Element) data from Space-Track.org.
+### Satellite Orbits
+<img width="1801" height="1079" alt="Screenshot 2026-05-06 at 11 24 10 AM" src="https://github.com/user-attachments/assets/ffa49d51-d56e-4c0b-b5d8-3ef777975a65" />
+
+### View active realtime satellites
+<img width="1798" height="1070" alt="Screenshot 2026-05-06 at 11 24 34 AM" src="https://github.com/user-attachments/assets/7dbd472d-a9f5-4999-915e-8fc958cdd9a2" />
+
+### View planet orbit renderings
+<img width="1795" height="1052" alt="Screenshot 2026-05-06 at 11 27 37 AM" src="https://github.com/user-attachments/assets/d9bace54-0d59-41dc-b804-7ee3e87dc88d" />
 
 ## Features
 
