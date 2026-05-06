@@ -1,6 +1,6 @@
 # SpaceViz 🛰️
 
-An interactive 3D satellite visualization dashboard built with Next.js, React Three Fiber, and real-time TLE (Two-Line Element) data from Space-Track.org.
+An interactive 3D satellite visualization dashboard built with Next.js, React Three Fiber, and real-time TLE (Two-Line Element) data from Space-Track.org. Go to https://spacevizbe--spaceviz-4aa96.us-central1.hosted.app/ to view hosted app!
 ### Satellite Orbits
 <img width="1801" height="1079" alt="Screenshot 2026-05-06 at 11 24 10 AM" src="https://github.com/user-attachments/assets/ffa49d51-d56e-4c0b-b5d8-3ef777975a65" />
 
